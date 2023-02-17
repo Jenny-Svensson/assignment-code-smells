@@ -15,13 +15,7 @@ export class Product {
     public imageUrl: string[],
     public price: number,
     public description: string
-  ) {
-    this.id = id;
-    this.name = name;
-    this.imageUrl = imageUrl;
-    this.price = price;
-    this.description = description;
-  }
+  ) {}
 }
 
 export function sortProductsBy(sort: Sort, products: Product[]): Product[] {
@@ -29,21 +23,28 @@ export function sortProductsBy(sort: Sort, products: Product[]): Product[] {
   products.forEach((product) => copiedList.push(product));
 
   let sortedList: Product[] = [];
-  if (sort === Sort.PRICE_ASCENDING) {
-    sortedList = sortList("Price", copiedList);
-    sortedList.reverse();
-  } else if (sort === Sort.PRICE_DECENDING) {
-    sortedList = sortList("Price", copiedList);
-  } else if (sort === Sort.NAME_ALPHABETIC) {
-    sortedList = sortList("Name", copiedList);
-  } else if (sort === Sort.NAME_ALPHABETIC_REVERSE) {
-    sortedList = sortList("Name", copiedList);
-    sortedList.reverse();
+
+  switch(String(sort)) {
+    case Sort.PRICE_ASCENDING:
+      sortedList = sortList("Price", copiedList);
+      sortedList.reverse();
+      break;
+    case Sort.PRICE_DECENDING:
+      sortedList = sortList("Price", copiedList);
+      break;
+    case Sort.NAME_ALPHABETIC:
+      sortedList = sortList("Name", copiedList);
+      break;
+    case Sort.NAME_ALPHABETIC_REVERSE:
+      sortedList = sortList("Name", copiedList);
+      sortedList.reverse();
+      break;
+
+    default: return sortedList;
   }
 
   return sortedList;
 }
-
 function sortList(whichAttribute: string, products: Product[]): Product[] {
   return products.sort((p1, p2) => {
     if (whichAttribute === "Price") {
@@ -67,6 +68,7 @@ function sortList(whichAttribute: string, products: Product[]): Product[] {
 /*
   2. Refaktorera funktionen createProductHtml :)
   */
+
 class Cart {
   addToCart(i: number) {}
 }
@@ -75,12 +77,12 @@ export let productList = JSON.parse(localStorage.getItem("savedList") || "[]");
 
 export function createProductHtml() {
   let quantity = 0;
+
   for (let i = 0; i < cartList.length; i++) {
     quantity += cartList[i].quantity;
   }
-  let floatingCart = document.getElementById(
-    "floatingcartnumber"
-  ) as HTMLElement;
+
+  let floatingCart = document.getElementById("floatingcartnumber") as HTMLElement;
   floatingCart.innerHTML = "" + quantity;
 
   for (let i = 0; i < productList.length; i++) {
@@ -88,8 +90,8 @@ export function createProductHtml() {
     let dogImgContainer: HTMLDivElement = document.createElement("div");
     dogImgContainer.className = "dogimgcontainer";
     dogproduct.appendChild(dogImgContainer);
-    let dogImg: HTMLImageElement = document.createElement("img");
 
+    let dogImg: HTMLImageElement = document.createElement("img");
     dogImg.src = productList[i].picture;
     dogImg.alt = productList[i].pictureAlt;
 
@@ -104,24 +106,30 @@ export function createProductHtml() {
     });
 
     dogImgContainer.appendChild(dogImg);
+
     let cartSymbolContainer: HTMLDivElement = document.createElement("div");
     cartSymbolContainer.className = "cartSymbolContainer";
+
     dogImgContainer.appendChild(cartSymbolContainer);
 
     let cartSymbol: HTMLElement = document.createElement("i");
     cartSymbol.className = "bi bi-bag-plus";
+
     cartSymbolContainer.appendChild(cartSymbol);
 
     let name: HTMLHeadingElement = document.createElement("h5");
     name.innerHTML = productList[i].name;
+
     dogproduct.appendChild(name);
 
     let price: HTMLHeadingElement = document.createElement("p");
     price.innerHTML = "$" + productList[i].price;
+
     dogproduct.appendChild(price);
 
     let info: HTMLHeadingElement = document.createElement("p");
     info.innerHTML = productList[i].info;
+
     dogproduct.appendChild(info);
 
     productList[i].productSpec = false;
@@ -143,6 +151,7 @@ export function createProductHtml() {
       dogproduct.className = "dogproduct";
       cat1.appendChild(dogproduct);
     }
+
     if (productList[i].category === "kriminella") {
       let cat2: HTMLElement = document.getElementById(
         "kriminella"
@@ -150,16 +159,19 @@ export function createProductHtml() {
       dogproduct.className = "dogproduct";
       cat2.appendChild(dogproduct);
     }
+
     if (productList[i].category == "singlar") {
       let cat3: HTMLElement = document.getElementById("singlar") as HTMLElement;
       dogproduct.className = "dogproduct";
       cat3.appendChild(dogproduct);
     }
+
     if (productList[i].category === "puppy") {
       let cat4: HTMLElement = document.getElementById("puppy") as HTMLElement;
       dogproduct.className = "dogproduct";
       cat4.appendChild(dogproduct);
     }
+    
     if (productList[i].category === "oldies") {
       let cat5: HTMLElement = document.getElementById("oldies") as HTMLElement;
       dogproduct.className = "dogproduct";
